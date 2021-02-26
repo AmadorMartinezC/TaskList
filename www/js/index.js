@@ -21,13 +21,36 @@
 // See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
 document.addEventListener('deviceready', onDeviceReady, false);
 
+// tasks = ['Prueba1', 'Prueba2', 'Prueba3'];
+//localStorage.setItem('taskList', JSON.stringify(tasks));
+var tasks;
+
 function afegirTasca(){
-	alert('afegint... ');
-	$('#listview').append('<li><a href="#page1">New Page<button style="color:red">X</button></a></li>');
+	var taskName = $('#newTaskName').val();
+	tasks = JSON.parse(localStorage.getItem('taskList'));
+	tasks.push(taskName);
+	localStorage.setItem('taskList', JSON.stringify(tasks));
+	$('#listview').empty();	
+	loadData();
+}
+
+function loadData(){
+	tasks = JSON.parse(localStorage.getItem('taskList'));
+	//tasks.push("Prueba4");
+	for (var i = 0; i <= tasks.length - 1; i++) {
+		$('#listview').append('<li>'+tasks[i]+'<button id="deleteTask" pos="'+i+'" style="color:red">X</button></li>');
+	}
+	$('#listview').listview("refresh");
+}
+
+function eliminarTasca(pos){
+	tasks = JSON.parse(localStorage.getItem('taskList'));
+	tasks.remove(pos);
+	loadData();
 }
 
 function onDeviceReady() {
-
-
     $('#addTask').click(afegirTasca);
+    $('#deleteTask').click(eliminarTasca(pos));
+    loadData();
 }
